@@ -34,7 +34,7 @@ export function DetailScreen({ route, navigation }: Props) {
 
   useEffect(() => {
     if (!pair) return;
-    navigation.setOptions({ title: pair.label });
+    navigation.setOptions({ title: `${pair.label} ${pair.nameJa}` });
   }, [pair, navigation]);
 
   useEffect(() => {

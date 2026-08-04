@@ -1,14 +1,19 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useCallback, useEffect, useState } from 'react';
-import { FlatList, RefreshControl, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { RefreshControl, SafeAreaView, SectionList, StyleSheet, Text, View } from 'react-native';
 import { fetchHistory } from '../api/forex';
 import { PairListItem } from '../components/PairListItem';
 import { CURRENCY_PAIRS } from '../constants/pairs';
 import { RootStackParamList } from '../navigation/types';
-import { SignalResult } from '../types';
+import { CurrencyPair, SignalResult } from '../types';
 import { buildSignal } from '../utils/signal';
 
 const HISTORY_DAYS = 90;
+
+const SECTIONS: { key: CurrencyPair['group']; title: string }[] = [
+  { key: 'jpy', title: '対円通貨ペア' },
+  { key: 'cross', title: 'クロス通貨ペア' },
+];
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Watchlist'>;
 
@@ -49,17 +54,27 @@ export function WatchlistScreen({ navigation }: Props) {
     setRefreshing(false);
   }, [loadAll]);
 
+  const sections = SECTIONS.map((section) => ({
+    title: section.title,
+    data: CURRENCY_PAIRS.filter((pair) => pair.group === section.key),
+  })).filter((section) => section.data.length > 0);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerBlock}>
         <Text style={styles.title}>Hayabusa FX</Text>
         <Text style={styles.subtitle}>テクニカル指標に基づく為替売買シグナル</Text>
+        <Text style={styles.note}>通貨ペアは松井証券FXの取扱ラインナップを参考にしています</Text>
       </View>
-      <FlatList
-        data={CURRENCY_PAIRS}
+      <SectionList
+        sections={sections}
         keyExtractor={(pair) => pair.id}
         contentContainerStyle={styles.list}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        stickySectionHeadersEnabled={false}
+        renderSectionHeader={({ section }) => (
+          <Text style={styles.sectionHeader}>{section.title}</Text>
+        )}
         renderItem={({ item }) => (
           <PairListItem
             pair={item}
@@ -69,6 +84,7 @@ export function WatchlistScreen({ navigation }: Props) {
           />
         )}
         ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+        SectionSeparatorComponent={() => <View style={{ height: 4 }} />}
       />
     </SafeAreaView>
   );
@@ -93,6 +109,19 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#64748B',
     marginTop: 2,
+  },
+  note: {
+    fontSize: 11,
+    color: '#94A3B8',
+    marginTop: 4,
+  },
+  sectionHeader: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#475569',
+    paddingHorizontal: 4,
+    paddingTop: 12,
+    paddingBottom: 8,
   },
   list: {
     paddingHorizontal: 16,
