@@ -14,6 +14,7 @@ export function PairListItem({ pair, signal, error, onPress }: Props) {
     <Pressable style={styles.row} onPress={onPress}>
       <View style={styles.left}>
         <Text style={styles.label}>{pair.label}</Text>
+        <Text style={styles.nameJa}>{pair.nameJa}</Text>
         {signal && (
           <Text
             style={[
@@ -63,6 +64,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     color: '#0F172A',
+  },
+  nameJa: {
+    fontSize: 12,
+    color: '#64748B',
   },
   change: {
     fontSize: 12,

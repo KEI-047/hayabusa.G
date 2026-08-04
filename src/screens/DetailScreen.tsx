@@ -12,6 +12,7 @@ import {
 import { fetchHistory } from '../api/forex';
 import { PriceChart } from '../components/PriceChart';
 import { SignalCard } from '../components/SignalCard';
+import { CONTENT_MAX_WIDTH } from '../constants/layout';
 import { findPair } from '../constants/pairs';
 import { RootStackParamList } from '../navigation/types';
 import { PricePoint, SignalResult } from '../types';
@@ -34,7 +35,7 @@ export function DetailScreen({ route, navigation }: Props) {
 
   useEffect(() => {
     if (!pair) return;
-    navigation.setOptions({ title: pair.label });
+    navigation.setOptions({ title: `${pair.label} ${pair.nameJa}` });
   }, [pair, navigation]);
 
   useEffect(() => {
@@ -76,7 +77,7 @@ export function DetailScreen({ route, navigation }: Props) {
     );
   }
 
-  const chartWidth = Dimensions.get('window').width - 32;
+  const chartWidth = Math.min(Dimensions.get('window').width, CONTENT_MAX_WIDTH) - 32;
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -118,6 +119,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8FAFC',
   },
   content: {
+    width: '100%',
+    maxWidth: CONTENT_MAX_WIDTH,
+    alignSelf: 'center',
     padding: 16,
     gap: 16,
   },

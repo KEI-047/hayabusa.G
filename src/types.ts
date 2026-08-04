@@ -1,8 +1,12 @@
+export type CurrencyPairGroup = 'jpy' | 'cross';
+
 export type CurrencyPair = {
   id: string;
   base: string;
   quote: string;
   label: string;
+  nameJa: string;
+  group: CurrencyPairGroup;
 };
 
 export type PricePoint = {
