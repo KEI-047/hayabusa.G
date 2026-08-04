@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { RefreshControl, SafeAreaView, SectionList, StyleSheet, Text, View } from 'react-native';
 import { fetchHistory } from '../api/forex';
 import { PairListItem } from '../components/PairListItem';
+import { CONTENT_MAX_WIDTH } from '../constants/layout';
 import { CURRENCY_PAIRS } from '../constants/pairs';
 import { RootStackParamList } from '../navigation/types';
 import { CurrencyPair, SignalResult } from '../types';
@@ -67,6 +68,7 @@ export function WatchlistScreen({ navigation }: Props) {
         <Text style={styles.note}>通貨ペアは松井証券FXの取扱ラインナップを参考にしています</Text>
       </View>
       <SectionList
+        style={styles.listWrapper}
         sections={sections}
         keyExtractor={(pair) => pair.id}
         contentContainerStyle={styles.list}
@@ -96,9 +98,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8FAFC',
   },
   headerBlock: {
+    width: '100%',
+    maxWidth: CONTENT_MAX_WIDTH,
+    alignSelf: 'center',
     paddingHorizontal: 20,
     paddingTop: 12,
     paddingBottom: 8,
+  },
+  listWrapper: {
+    flex: 1,
+    width: '100%',
+    maxWidth: CONTENT_MAX_WIDTH,
+    alignSelf: 'center',
   },
   title: {
     fontSize: 24,
